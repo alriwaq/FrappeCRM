@@ -30,3 +30,15 @@ class CRMProduct(Document):
 			self.product_name = self.product_code
 		else:
 			self.product_name = self.product_name.strip()
+
+	@staticmethod
+	def default_list_data():
+		columns = [
+			{"label": "Product Code", "type": "Data", "key": "product_code", "width": "14rem"},
+			{"label": "Product Name", "type": "Data", "key": "product_name", "width": "14rem"},
+			{"label": "Standard Rate", "type": "Currency", "key": "standard_rate", "width": "10rem"},
+			{"label": "Disabled", "type": "Check", "key": "disabled", "width": "8rem"},
+			{"label": "Modified", "type": "Datetime", "key": "modified", "width": "10rem"},
+		]
+		rows = ["product_code", "product_name", "standard_rate", "disabled", "modified"]
+		return {"columns": columns, "rows": rows}

@@ -43,6 +43,18 @@ const routes = [
     props: true,
   },
   {
+    alias: '/products',
+    path: '/products/view/:viewType?',
+    name: 'Products',
+    component: () => import('@/pages/Products.vue'),
+  },
+  {
+    path: '/products/:productId',
+    name: 'Product',
+    component: () => import('@/pages/Product.vue'),
+    props: true,
+  },
+  {
     alias: '/notes',
     path: '/notes/view/:viewType?',
     name: 'Notes',
@@ -183,6 +195,7 @@ router.beforeEach(async (to, from, next) => {
     [
       'Leads',
       'Deals',
+      'Products',
       'Contacts',
       'Organizations',
       'Notes',
@@ -201,6 +214,7 @@ router.beforeEach(async (to, from, next) => {
       const doctypeMap = {
         Leads: 'CRM Lead',
         Deals: 'CRM Deal',
+        Products: 'CRM Product',
         Contacts: 'Contact',
         Organizations: 'CRM Organization',
         Notes: 'FCRM Note',
