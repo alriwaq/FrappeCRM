@@ -351,6 +351,11 @@ def get_data(
 			if column_meta and column_meta.get("hidden"):
 				columns.remove(column)
 
+		# List rows are keyed and routed by document name in the frontend.
+		# Always fetch it even if a saved CRM View Settings row config omitted it.
+		if "name" not in rows:
+			rows.append("name")
+
 		# check if rows has group_by_field if not add it
 		if group_by_field and group_by_field not in rows:
 			rows.append(group_by_field)
