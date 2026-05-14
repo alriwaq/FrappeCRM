@@ -54,9 +54,8 @@ import { usersStore } from '@/stores/users'
 import { isMobileView } from '@/composables/settings'
 import { showQuickEntryModal, quickEntryProps } from '@/composables/modals'
 import { useDocument } from '@/data/document'
-import { createResource, toast } from 'frappe-ui'
-import { Breadcrumbs } from 'frappe-ui'
-import { ref, nextTick } from 'vue'
+import { Breadcrumbs, createResource, toast } from 'frappe-ui'
+import { ref } from 'vue'
 
 const props = defineProps({
   productId: { type: String, required: true },
@@ -65,19 +64,19 @@ const props = defineProps({
 const { isManager } = usersStore()
 const error = ref(null)
 
-const { document: product, triggerOnBeforeCreate } = useDocument(
-  'CRM Product',
-  props.productId,
-)
+const { document: product } = useDocument('CRM Product', props.productId)
 
-async function saveProduct() {
+function saveProduct() {
   error.value = null
-  try {
-    await product.save.submit()
-    toast({ title: __('Product saved'), variant: 'success' })
-  } catch (err) {
-    error.value = err?.messages?.[0] || err?.message
-  }
+  product.save.submit(null, {
+    onSuccess: () => {
+      toast.success(__('Product saved'))
+    },
+    onError: (err) => {
+      error.value = err.messages?.[0] || __('Error saving product')
+      toast.error(error.value)
+    },
+  })
 }
 
 const tabs = createResource({

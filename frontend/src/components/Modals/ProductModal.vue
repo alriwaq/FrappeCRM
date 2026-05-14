@@ -95,8 +95,8 @@ async function createProduct() {
   loading.value = false
   if (doc?.name) {
     product.doc = {}
-    router.push({ name: 'Product', params: { productId: doc.name } })
     show.value = false
+    router.push({ name: 'Products' })
   }
 }
 
