@@ -122,7 +122,11 @@ const rows = computed(() => {
         _rows[row] = getFormattedPercent(row, product)
       }
 
-      if (['modified', 'creation'].includes(row)) {
+      if (['product_code', 'product_name'].includes(row)) {
+        _rows[row] = {
+          label: product[row],
+        }
+      } else if (['modified', 'creation'].includes(row)) {
         _rows[row] = {
           label: formatDate(product[row]),
           timeAgo: __(timeAgo(product[row])),

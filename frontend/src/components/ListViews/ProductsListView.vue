@@ -83,7 +83,7 @@
             </Button>
           </div>
           <div
-            v-else-if="label"
+            v-else-if="label || item === 0 || item"
             class="truncate text-base"
             @click="
               (event) =>
@@ -96,7 +96,7 @@
                 })
             "
           >
-            {{ label }}
+            {{ label ?? item }}
           </div>
         </template>
       </ListRowItem>
