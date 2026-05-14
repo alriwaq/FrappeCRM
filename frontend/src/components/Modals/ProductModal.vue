@@ -38,7 +38,7 @@
           <Button
             variant="solid"
             :label="__('Create')"
-            :loading="loading"
+            :loading="_create.loading"
             @click="createProduct"
           />
         </div>
@@ -54,8 +54,8 @@ import { usersStore } from '@/stores/users'
 import { isMobileView } from '@/composables/settings'
 import { showQuickEntryModal, quickEntryProps } from '@/composables/modals'
 import { useDocument } from '@/data/document'
-import { call, createResource } from 'frappe-ui'
-import { ref, nextTick } from 'vue'
+import { createResource } from 'frappe-ui'
+import { ref, nextTick, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -66,38 +66,41 @@ const show = defineModel({ type: Boolean })
 
 const { isManager } = usersStore()
 const router = useRouter()
-const loading = ref(false)
 const error = ref(null)
 
 const { document: product, triggerOnBeforeCreate } = useDocument('CRM Product')
 
-async function createProduct() {
-  loading.value = true
-  error.value = null
-
-  await triggerOnBeforeCreate?.()
-
-  const doc = await call(
-    'frappe.client.insert',
-    {
-      doc: {
-        doctype: 'CRM Product',
-        ...product.doc,
-      },
-    },
-    {
-      onError: (err) => {
-        error.value = err.error?.messages?.[0]
-        loading.value = false
-      },
-    },
-  )
-  loading.value = false
-  if (doc?.name) {
+const _create = createResource({
+  url: 'frappe.client.insert',
+  onSuccess: (d) => {
     product.doc = {}
     show.value = false
     router.push({ name: 'Products' })
-  }
+  },
+  onError: (err) => {
+    if (err.exc_type == 'MandatoryError') {
+      const fieldName = err.messages
+        .map((msg) => {
+          let arr = msg.split(': ')
+          return arr[arr.length - 1].trim()
+        })
+        .join(', ')
+      error.value = __('Please fill the mandatory fields: {0}', [fieldName])
+      return
+    }
+    error.value = err.messages?.[0] || __('Could not create product')
+  },
+})
+
+async function createProduct() {
+  error.value = null
+  await triggerOnBeforeCreate?.()
+  _create.submit({
+    doc: {
+      doctype: 'CRM Product',
+      ...product.doc,
+    },
+  })
 }
 
 const tabs = createResource({
@@ -105,19 +108,13 @@ const tabs = createResource({
   cache: ['QuickEntry', 'CRM Product'],
   params: { doctype: 'CRM Product', type: 'Quick Entry' },
   auto: true,
-  transform: (_tabs) => {
-    return _tabs.forEach((tab) => {
-      tab.sections.forEach((section) => {
-        section.columns.forEach((column) => {
-          column.fields.forEach((field) => {
-            if (field.fieldtype === 'Table') {
-              product.doc[field.fieldname] = []
-            }
-          })
-        })
-      })
-    })
-  },
+})
+
+onMounted(() => {
+  product.doc = {
+    ...product.doc,
+    ...props.defaults,
+  }
 })
 
 function openQuickEntryModal() {
