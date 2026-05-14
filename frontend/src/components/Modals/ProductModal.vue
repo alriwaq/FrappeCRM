@@ -75,7 +75,7 @@ const _create = createResource({
   onSuccess: (d) => {
     product.doc = {}
     show.value = false
-    router.push({ name: 'Products' })
+    router.push({ name: 'Product', params: { productId: d.name } })
   },
   onError: (err) => {
     if (err.exc_type == 'MandatoryError') {

@@ -85,11 +85,9 @@ const updatedPageCount = ref(20)
 const viewControls = ref(null)
 
 const rows = computed(() => {
-  if (
-    !products.value?.data?.data ||
-    !['list', 'group_by'].includes(products.value.data.view_type)
-  )
-    return []
+  if (!products.value?.data?.data) return []
+  const viewType = products.value.data.view_type
+  if (viewType && !['list', 'group_by'].includes(viewType)) return []
   return products.value.data.data.map((product) => {
     let _rows = {}
     products.value.data.rows.forEach((row) => {
