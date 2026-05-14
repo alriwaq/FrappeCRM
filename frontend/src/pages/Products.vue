@@ -89,7 +89,7 @@ const rows = computed(() => {
   const viewType = products.value.data.view_type
   if (viewType && !['list', 'group_by'].includes(viewType)) return []
   return products.value.data.data.map((product) => {
-    let _rows = {}
+    let _rows = { name: product.name }
     products.value.data.rows.forEach((row) => {
       _rows[row] = product[row]
 

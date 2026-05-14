@@ -40,5 +40,5 @@ class CRMProduct(Document):
 			{"label": "Disabled", "type": "Check", "key": "disabled", "width": "8rem"},
 			{"label": "Modified", "type": "Datetime", "key": "modified", "width": "10rem"},
 		]
-		rows = ["product_code", "product_name", "standard_rate", "disabled", "modified"]
+		rows = ["name", "product_code", "product_name", "standard_rate", "disabled", "modified"]
 		return {"columns": columns, "rows": rows}
