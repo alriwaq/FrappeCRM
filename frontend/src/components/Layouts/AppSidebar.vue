@@ -164,6 +164,7 @@ import SquareAsterisk from '@/components/Icons/SquareAsterisk.vue'
 import LeadsIcon from '@/components/Icons/LeadsIcon.vue'
 import DealsIcon from '@/components/Icons/DealsIcon.vue'
 import ProductsIcon from '@/components/Icons/ProductsIcon.vue'
+import UnitsIcon from '@/components/Icons/UnitsIcon.vue'
 import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
 import OrganizationsIcon from '@/components/Icons/OrganizationsIcon.vue'
 import NoteIcon from '@/components/Icons/NoteIcon.vue'
@@ -234,6 +235,11 @@ const links = [
     label: 'Products',
     icon: ProductsIcon,
     to: 'Products',
+  },
+  {
+    label: 'Units',
+    icon: UnitsIcon,
+    to: 'Units',
   },
   {
     label: 'Contacts',
@@ -323,6 +329,8 @@ function getIcon(routeName, icon) {
       return DealsIcon
     case 'Products':
       return ProductsIcon
+    case 'Units':
+      return UnitsIcon
     case 'Contacts':
       return ContactsIcon
     case 'Organizations':
