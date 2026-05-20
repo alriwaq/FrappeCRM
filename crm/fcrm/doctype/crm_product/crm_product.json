@@ -15,7 +15,9 @@
   "standard_rate",
   "image",
   "section_break_rtwm",
-  "description"
+  "description",
+  "section_break_units",
+  "units"
  ],
  "fields": [
   {
@@ -65,6 +67,17 @@
    "fieldname": "standard_rate",
    "fieldtype": "Currency",
    "label": "Standard Selling Rate"
+  },
+  {
+   "fieldname": "section_break_units",
+   "fieldtype": "Section Break",
+   "label": "Units"
+  },
+  {
+   "fieldname": "units",
+   "fieldtype": "Table",
+   "label": "Units",
+   "options": "CRM Product Units"
   }
  ],
  "grid_page_length": 50,
