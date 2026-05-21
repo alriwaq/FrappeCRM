@@ -32,18 +32,21 @@ class CRMProduct(Document):
 		self.sync_units()
 
 	def sync_units(self):
-		"""Keep the Units child table in sync with all records in the Units DocType."""
-		all_units = frappe.get_all("Units", fields=["name"], order_by="name asc")
-		all_unit_names = {u.name for u in all_units}
+		"""Keep the Units child table in sync with Units linked to this product."""
+		linked_units = frappe.get_all(
+			"Units",
+			filters={"product": self.name},
+			fields=["name"],
+			order_by="name asc",
+		)
+		linked_unit_names = {u.name for u in linked_units}
 
-		# Index existing rows by unit name so we don't duplicate them
-		existing = {row.unit for row in self.get("units") or []}
+		# Remove rows whose unit is no longer linked to this product
+		self.units = [row for row in (self.get("units") or []) if row.unit in linked_unit_names]
 
-		# Remove rows whose unit no longer exists in the Units DocType
-		self.units = [row for row in (self.get("units") or []) if row.unit in all_unit_names]
-
-		# Append a row for every unit not yet present
-		for unit in all_units:
+		# Append rows for any newly linked unit not yet in the child table
+		existing = {row.unit for row in (self.get("units") or [])}
+		for unit in linked_units:
 			if unit.name not in existing:
 				self.append("units", {"unit": unit.name})
 

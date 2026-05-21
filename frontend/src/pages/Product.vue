@@ -22,6 +22,10 @@
         @click="openQuickEntryModal"
       />
       <Button
+        :label="__('New Unit')"
+        @click="showUnitModal = true"
+      />
+      <Button
         variant="solid"
         :label="__('Save')"
         :loading="product.save?.loading"
@@ -43,6 +47,12 @@
       <ErrorMessage v-if="error" class="mt-4" :message="__(error)" />
     </div>
   </div>
+  <UnitModal
+    v-model="showUnitModal"
+    :defaults="{ product: productId }"
+    :redirect="false"
+    @created="product.reload()"
+  />
 </template>
 
 <script setup>
@@ -50,6 +60,7 @@ import EditIcon from '@/components/Icons/EditIcon.vue'
 import FieldLayout from '@/components/FieldLayout/FieldLayout.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import CustomActions from '@/components/CustomActions.vue'
+import UnitModal from '@/components/Modals/UnitModal.vue'
 import { usersStore } from '@/stores/users'
 import { isMobileView } from '@/composables/settings'
 import { showQuickEntryModal, quickEntryProps } from '@/composables/modals'
@@ -63,6 +74,7 @@ const props = defineProps({
 
 const { isManager } = usersStore()
 const error = ref(null)
+const showUnitModal = ref(false)
 
 const { document: product } = useDocument('CRM Product', props.productId)
 

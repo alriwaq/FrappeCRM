@@ -60,7 +60,10 @@ import { useRouter } from 'vue-router'
 
 const props = defineProps({
   defaults: { type: Object, default: () => ({}) },
+  redirect: { type: Boolean, default: true },
 })
+
+const emit = defineEmits(['created'])
 
 const show = defineModel({ type: Boolean })
 
@@ -75,7 +78,10 @@ const _create = createResource({
   onSuccess: (d) => {
     unit.doc = {}
     show.value = false
-    router.push({ name: 'Unit', params: { unitId: d.name } })
+    emit('created', d)
+    if (props.redirect) {
+      router.push({ name: 'Unit', params: { unitId: d.name } })
+    }
   },
   onError: (err) => {
     if (err.exc_type == 'MandatoryError') {

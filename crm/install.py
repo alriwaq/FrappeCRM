@@ -22,6 +22,7 @@ def after_install(force=False):
 	add_property_setter()
 	add_email_template_custom_fields()
 	add_email_account_custom_field()
+	add_units_custom_fields()
 	add_default_industries()
 	add_default_lead_sources()
 	add_default_lost_reasons()
@@ -321,6 +322,28 @@ def add_email_account_custom_field():
 		)
 
 		frappe.clear_cache(doctype="Email Account")
+
+
+def add_units_custom_fields():
+	if not frappe.get_meta("Units").has_field("product"):
+		click.secho("* Installing Custom Fields in Units")
+
+		create_custom_fields(
+			{
+				"Units": [
+					{
+						"fieldname": "product",
+						"fieldtype": "Link",
+						"label": "Product",
+						"options": "CRM Product",
+						"insert_after": "title",
+						"in_list_view": 1,
+					}
+				]
+			}
+		)
+
+		frappe.clear_cache(doctype="Units")
 
 
 def add_default_industries():
