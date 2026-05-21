@@ -66,6 +66,7 @@
   },
   {
    "bold": 1,
+   "default": "0",
    "fieldname": "rate",
    "fieldtype": "Currency",
    "in_list_view": 1,

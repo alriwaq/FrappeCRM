@@ -103,6 +103,13 @@ class CRMDeal(Document):
 
 	def before_save(self):
 		self.apply_sla()
+		self.fill_product_rates()
+
+	def fill_product_rates(self):
+		"""Auto-populate rate from CRM Product.standard_rate when rate is missing."""
+		for row in self.get("products") or []:
+			if row.product_code and not row.rate:
+				row.rate = frappe.db.get_value("CRM Product", row.product_code, "standard_rate") or 0
 
 	def validate_status(self):
 		if self.is_new() and not self.status:

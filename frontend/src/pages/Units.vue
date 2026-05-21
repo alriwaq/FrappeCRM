@@ -86,7 +86,7 @@ const rows = computed(() => {
     units.value.data.rows.forEach((row) => {
       _rows[row] = unit[row]
 
-      if (row === 'name') {
+      if (row === 'title') {
         _rows[row] = {
           label: unit[row],
         }
